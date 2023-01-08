@@ -1,6 +1,7 @@
 {
   "name": "api-project",
   "scripts": {
+    "format": "prettier --write .",
     "test": "jest",
     "task": "echo 'Doing a task'"
   },
@@ -17,5 +18,8 @@
   "homepage": "https://github.com/IlonaM8/api-project#readme",
   "dependencies": {
     "jest": "^29.3.1"
+  },
+  "devDependencies": {
+    "prettier": "2.8.2"
   }
 }

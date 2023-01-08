@@ -3,3 +3,4 @@ module.exports = {
     verbose: true
 
 };
+ 
