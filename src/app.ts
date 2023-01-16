@@ -22,9 +22,14 @@ app.get("/planets", async (request, response) => {
    response.json(planets);
 });
 
-//here is the new root
+//This is saving data to the database
 app.post("/planets",validate({ body: planetSchema }), async (request, response) => {
-    const planet: PlanetData = request.body;
+    const planetData: PlanetData = request.body;
+
+    //save the data into the database table
+    const planet = await prisma.planet.create({
+        data: planetData
+    });
 
     response.status(201).json(planet);
  });
