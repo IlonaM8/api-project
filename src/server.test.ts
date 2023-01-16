@@ -39,3 +39,22 @@ test("GET /planets", async () => {
 
     expect(response.body).toEqual(planets); //change what we're expecting here
 });
+
+
+test("POST /planets", async () => {
+
+    const planet = {
+            name: "Mercury",
+            diameter: 223455,
+            moons: 34
+    };
+
+
+    const response = await request
+        .post("/planets")
+        .send(planet) //need the data to be posted .send(planet) with planet object
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+    expect(response.body).toEqual(planet); //change what we're expecting here
+});
