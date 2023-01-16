@@ -6,9 +6,9 @@ import app from "./app";
 
 const request = supertest(app);
 
-test("GET /planets", async () => {
+describe("GET /planets", () => {
+test("Valid request", async () => {
     const planets = [
-        //set what we're expecting to come back
         {
             id: 1,
             name: "Mercury",
@@ -39,9 +39,12 @@ test("GET /planets", async () => {
 
     expect(response.body).toEqual(planets); //change what we're expecting here
 });
+});
 
 
-test("POST /planets", async () => {
+//describe block here
+describe("POST /planets", () => {
+test("Valid request", async () => {
 
     const planet = {
             name: "Mercury",
@@ -57,4 +60,29 @@ test("POST /planets", async () => {
         .expect("Content-Type", /application\/json/);
 
     expect(response.body).toEqual(planet); //change what we're expecting here
+});
+
+//new test: invalid request
+test("Invalid request", async () => {
+
+    const planet = {
+            name: "Mercury",
+            diameter: 223455,
+            moons: 34
+    };
+
+
+    const response = await request
+        .post("/planets")
+        .send(planet) //need the data to be posted .send(planet) with planet object
+        .expect(422)
+        .expect("Content-Type", /application\/json/);
+
+    expect(response.body).toEqual({
+        errors: {
+            body: expect.any(Array)
+        }
+
+    });
+});
 });
