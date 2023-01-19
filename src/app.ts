@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { validate, ValidationErrorMiddleware, planetSchema, planetData } from "./lib/validation";
 
 
+
 const app = express();
 
 //new instance of prisma client
@@ -36,7 +37,8 @@ app.post("/planets", validate({ body: planetSchema }), async (request, response)
 });
 
 //create the route for the a single planet route
-app.get("/planets/:id", async (request, response) => {
+// pattern for a number (\\d+)
+app.get("/planets/:id(\\d+)", async (request, response, next) => {
     const planetId = Number(request.params.id);
 
     const planet = await prisma.planet.findUnique({
@@ -45,9 +47,22 @@ app.get("/planets/:id", async (request, response) => {
         }
     });
 
+    //error handling for id that not does not exist
+    if (!planet){
+        response.status(404);
+        return next(`Cannot GET /planets/${planetId}`);
+    }
+
     response.json(planet);
 
 });
+
+
+
+
+
+
+
 
 
 /**

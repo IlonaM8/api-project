@@ -78,4 +78,28 @@ describe("GET /planet/:id", () => {
 
        expect(response.body).toEqual(planet);
    });
+
+   //error test for a specific request
+   test("Planet does not exist", async () => {
+
+    const response = await request
+          .get("/planets/56")
+          .expect(404)
+          .expect("Content-Type", /text\/html/);
+
+    expect(response.text).toContain("Cannot GET /planets/56")
+
+   });
+
+   test("Invalid Planet ID", async () => {
+
+    const response = await request
+          .get("/planets/asdf")
+          .expect(404)
+          .expect("Content-Type", /text\/html/);
+
+    expect(response.text).toContain("Cannot GET /planets/asdf")
+
+   });
+
     })
