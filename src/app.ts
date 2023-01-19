@@ -35,37 +35,24 @@ app.post("/planets", validate({ body: planetSchema }), async (request, response)
 
 });
 
+//create the route for the a single planet route
+app.get("/planets/:id", async (request, response) => {
+    const planetId = Number(request.params.id);
 
-//after al the routes - run the middleware
-app.use(ValidationErrorMiddleware);
+    const planet = await prisma.planet.findUnique({
+        where: {
+            id: planetId
+        }
+    });
 
-export default app;
+    response.json(planet);
 
-
-
-/* Vlaidation is working: this is the response from POSTMAN
-
-{
-    "errors": {
-        "body": [
-            {
-                "instancePath": "",
-                "schemaPath": "#/required",
-                "keyword": "required",
-                "params": {
-                    "missingProperty": "name"
-                },
-                "message": "must have required property 'name'"
-            }
-        ]
-    }
-}
-
-*/
+});
 
 
 /**
-Here is the new planet created in our db
+
+Here is the planet with the id: 5
 {
     "id": 5,
     "name": "TOI 700 b",
@@ -75,9 +62,18 @@ Here is the new planet created in our db
     "createdAt": "2023-01-19T14:35:08.888Z",
     "updatedAt": "2023-01-19T14:35:08.888Z"
 }
-
-
-
-
-
  */
+
+
+
+
+
+
+
+
+//after al the routes - run the middleware
+app.use(ValidationErrorMiddleware);
+
+export default app;
+
+

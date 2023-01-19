@@ -60,4 +60,22 @@ test("Invalid request", async() => {
 });
 })
 
+// new route to get a single planet
+describe("GET /planet/:id", () => {
+    test("Valid request", async() => {
+        const planet = {
+           name: "TOI 700 b",
+           diameter: 7581,
+           moons: 1
+       };
 
+
+       const response = await request
+       .post("/planets/5")
+       .send(planet)
+       .expect(200)  //response 201 - something new is being created
+       .expect("Content-Type", /application\/json/);
+
+       expect(response.body).toEqual(planet);
+   });
+    })
