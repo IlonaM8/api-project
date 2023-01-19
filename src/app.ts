@@ -2,9 +2,12 @@ import express from "express";
 import "express-async-errors";
 import { PrismaClient } from "@prisma/client";
 
-import { validate, ValidationErrorMiddleware, planetSchema, planetData } from "./lib/validation";
-
-
+import {
+    validate,
+    ValidationErrorMiddleware,
+    planetSchema,
+    planetData,
+} from "./lib/validation";
 
 const app = express();
 
@@ -19,22 +22,24 @@ app.get("/planets", async (request, response) => {
     const planets = await prisma.planet.findMany();
 
     response.json(planets);
-
 });
 
 //creating a new route with POST method
 // call validate() fun to validate the request body. The request body will be validated against the description in planetSchema
-app.post("/planets", validate({ body: planetSchema }), async (request, response) => {
-    const planetData: planetData = request.body; //if valid - should be type planetData
+app.post(
+    "/planets",
+    validate({ body: planetSchema }),
+    async (request, response) => {
+        const planetData: planetData = request.body; //if valid - should be type planetData
 
-    //making a query to db using Prisma to save the data into db
-    const planet = await prisma.planet.create({
-        data: planetData
-    });
+        //making a query to db using Prisma to save the data into db
+        const planet = await prisma.planet.create({
+            data: planetData,
+        });
 
-    response.status(201).json(planet);
-
-});
+        response.status(201).json(planet);
+    }
+);
 
 //create the route for the a single planet route
 // pattern for a number (\\d+)
@@ -43,27 +48,41 @@ app.get("/planets/:id(\\d+)", async (request, response, next) => {
 
     const planet = await prisma.planet.findUnique({
         where: {
-            id: planetId
-        }
+            id: planetId,
+        },
     });
 
     //error handling for id that not does not exist
-    if (!planet){
+    if (!planet) {
         response.status(404);
         return next(`Cannot GET /planets/${planetId}`);
     }
 
     response.json(planet);
-
 });
 
+//route for update
+app.put(
+    "/planets/:id(\\d+)",
+    validate({ body: planetSchema }),
+    async (request, response, next) => {
+        const planetId = Number(request.params.id);
+        const planetData: planetData = request.body; //if valid - should be type planetData
 
+        //making a query to db using Prisma to save the data into db
+        try {
+            const planet = await prisma.planet.update({
+                where: { id: planetId },
+                data: planetData,
+            });
 
-
-
-
-
-
+            response.status(200).json(planet);
+        } catch (error) {
+            response.status(404);
+            next(`Cannot PUT /planets/${planetId}`);
+        }
+    }
+);
 
 /**
 
@@ -79,16 +98,7 @@ Here is the planet with the id: 5
 }
  */
 
-
-
-
-
-
-
-
 //after al the routes - run the middleware
 app.use(ValidationErrorMiddleware);
 
 export default app;
-
-

@@ -102,4 +102,95 @@ describe("GET /planet/:id", () => {
 
    });
 
+})
+
+//Update a planet
+describe("PUT /planets/:id", () => {
+    test("Valid request", async() => {
+         const planet = {
+            id: 5,
+            name: "TOI 700 b",
+            description: "TOI-700 b is a super Earth exoplanet that orbits an M-type star. Its mass is 1.11 Earths, it takes 10 days to complete one orbit of its star" ,
+            diameter: 7581,
+            moons: 1
+        };
+
+        const response = await request
+        .put("/planets/5")
+        .send({
+                id: 5,
+                name: "TOI 700 b",
+                description: "TOI-700 b is a super Earth exoplanet that orbits an M-type star. Its mass is 1.11 Earths, it takes 10 days to complete one orbit of its star" ,
+                diameter: 7581,
+                moons: 1
+        })
+        .expect(200)  //response 201 - something new is being created
+        .expect("Content-Type", /application\/json/);
+
+        expect(response.body).toEqual(planet);
+    });
+
+
+
+    test("Invalid request", async() => {
+        const planet = {
+           diameter: 7.581,
+           moons: 1
+       };
+
+
+       const response = await request
+       .put("/planets/34")
+       .send(planet)
+       .expect(422)  //response 422 - something in the structure wasn't correct
+       .expect("Content-Type", /application\/json/);
+
+       //we're not expecting a succcessful response but an object with an errors propertiy - containing a body property - containing an array of errors.
+       expect(response.body).toEqual({
+        errors: {
+            body: expect.any(Array)
+        }
+       });
+    });
+
+
+    test("Planet does not exist", async () => {
+
+        const response = await request
+              .put("/planets/56")
+              .send({
+                id: 5,
+                name: "TOI 700 b",
+                description: "TOI-700 b is a super Earth exoplanet that orbits an M-type star. Its mass is 1.11 Earths, it takes 10 days to complete one orbit of its star" ,
+                diameter: 7581,
+                moons: 1
+
+              })
+              .expect(404)
+              .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot PUT /planets/56")
+
+       });
+
+       test("Invalid Planet ID", async () => {
+
+        const response = await request
+              .put("/planets/asdf")
+              .send({
+                id: 5,
+                name: "TOI 700 b",
+                description: "TOI-700 b is a super Earth exoplanet that orbits an M-type star. Its mass is 1.11 Earths, it takes 10 days to complete one orbit of its star" ,
+                diameter: 7581,
+                moons: 1
+
+              })
+              .expect(404)
+              .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot PUT /planets/asdf")
+
+       });
     })
+
+
