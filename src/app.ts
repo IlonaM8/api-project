@@ -24,7 +24,12 @@ app.get("/planets", async (request, response) => {
 //creating a new route with POST method
 // call validate() fun to validate the request body. The request body will be validated against the description in planetSchema
 app.post("/planets", validate({ body: planetSchema }), async (request, response) => {
-    const planet: planetData = request.body; //if valid - should be type planetData
+    const planetData: planetData = request.body; //if valid - should be type planetData
+
+    //making a query to db using Prisma to save the data into db
+    const planet = await prisma.planet.create({
+        data: planetData
+    });
 
     response.status(201).json(planet);
 
@@ -57,3 +62,22 @@ export default app;
 }
 
 */
+
+
+/**
+Here is the new planet created in our db
+{
+    "id": 5,
+    "name": "TOI 700 b",
+    "description": null,
+    "diameter": 77581,
+    "moons": 1,
+    "createdAt": "2023-01-19T14:35:08.888Z",
+    "updatedAt": "2023-01-19T14:35:08.888Z"
+}
+
+
+
+
+
+ */

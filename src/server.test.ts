@@ -22,7 +22,7 @@ describe("POST /planets", () => {
 test("Valid request", async() => {
      const planet = {
         name: "TOI 700 b",
-        diameter: 7.581,
+        diameter: 7581,
         moons: 1
     };
 
