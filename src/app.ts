@@ -1,5 +1,8 @@
 import express from "express";
 import "express-async-errors";
+import cors from "cors";
+
+
 import { PrismaClient } from "@prisma/client";
 
 import {
@@ -9,6 +12,11 @@ import {
     planetData,
 } from "./lib/validation";
 
+//cors options: allow only this web page to make a request to out API
+const corsOptions = {
+    origin: "http://localhost:8080"
+}
+
 const app = express();
 
 //new instance of prisma client
@@ -16,6 +24,12 @@ const prisma = new PrismaClient();
 
 //midleware
 app.use(express.json());
+
+//cors middleware
+app.use(cors(corsOptions));
+
+
+
 
 //get all resources from db
 app.get("/planets", async (request, response) => {
