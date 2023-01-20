@@ -300,3 +300,28 @@ describe("DELETE /planets/:id", () => {
         expect(response.text).toContain("Cannot DELETE /planets/asdf");
     });
 });
+
+
+//test routes that can accept file uploads
+describe("POST /planets/:id/photo", () => {
+ test("Invalid planet ID", async () => {
+    const response = await request
+    .post("/planets/asdf/photo")
+    .expect(404)
+    .expect("Content-Type", /text\/html/);
+
+   expect(response.text).toContain("Cannot POST /planets/asdf/photo");
+ });
+
+ test("Invalid request with no file upload", async () => {
+    const response = await request
+    .post("/planets/11/photo")
+    .expect(400) //client error - submitted a request with no photo
+    .expect("Content-Type", /text\/html/);
+
+   expect(response.text).toContain("Cannot POST /planets/asdf/photo");
+
+ });
+
+ 
+})

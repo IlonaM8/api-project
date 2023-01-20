@@ -12,6 +12,12 @@ import {
     planetData,
 } from "./lib/validation";
 
+//import multer middleware here
+import { initMulterMiddleware } from "./lib/middleware/multer";
+
+//new instance
+const upload = initMulterMiddleware();
+
 //cors options: allow only this web page to make a request to out API
 const corsOptions = {
     origin: "http://localhost:8080"
@@ -113,6 +119,21 @@ app.delete("/planets/:id(\\d+)", async (request, response, next) => {
     });
 
 
+    //route for file uploads
+    app.post("/planets/:id(\\d+)/photo",
+    upload.single("photo"),
+    async (request, response, next) => {
+        console.log("request.file", request.file);
+
+        if(!request.file){
+            response.status(400);
+            return next("No photo file uploaded.");
+        }
+
+        const photoFilename = request.file.filename;
+        response.status(201).json({ photoFilename});
+    });
+
 
 
 
@@ -129,31 +150,4 @@ export default app;
 
 
 
-/**
 
-Here is the planet with the id: 5
-{
-    "id": 5,
-    "name": "TOI 700 b",
-    "description": null,
-    "diameter": 77581,
-    "moons": 1,
-    "createdAt": "2023-01-19T14:35:08.888Z",
-    "updatedAt": "2023-01-19T14:35:08.888Z"
-}
- */
-
-
-
-/* Here is the update with a description for planet with the id: 5
-{
-    "id": 5,
-    "name": "TOI 700 b",
-    "description": "TOI-700 b is a super Earth exoplanet that orbits an M-type star.
-                     Its mass is 1.11 Earths, it takes 10 days to complete one orbit of its star",
-    "diameter": 77581,
-    "moons": 1,
-    "createdAt": "2023-01-19T14:35:08.888Z",
-    "updatedAt": "2023-01-19T14:35:08.888Z"
-}
- */
