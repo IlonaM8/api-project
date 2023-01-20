@@ -303,7 +303,7 @@ describe("DELETE /planets/:id", () => {
 
 /**
  * These tests depend on: src/lib/middleware/multer.mock.ts
- * It uses multer.memoryStorage, so no files are written to disk. 
+ * It uses multer.memoryStorage, so no files are written to disk.
  */
 
 
@@ -317,6 +317,21 @@ describe("POST /planets/:id/photo", () => {
         .expect("Access-Control-Allow-Origin", "http://localhost:8080");
 
     });
+
+    test("Planet does not exist", async () => {
+        //@ts-ignore
+        prismaMock.planet.update.mockRejectedValue(new Error("Error"));
+
+        const response = await request
+        .post("/planets/23/photo")
+        .attach("photo", "test-fixtures/photos/file.png")
+        .expect(404)
+        .expect("Content-Type",/text\/html/)
+
+      expect(response.text).toContain("Cannot POST /planets/23/photo");
+
+
+    })
 
  test("Invalid planet ID", async () => {
     const response = await request

@@ -130,13 +130,27 @@ app.delete("/planets/:id(\\d+)", async (request, response, next) => {
             return next("No photo file uploaded.");
         }
 
+        const planetId = Number(request.params.id);
         const photoFilename = request.file.filename;
+
+
+        try{
+            await prisma.planet.update({
+                where: { id: planetId },
+                data: { photoFilename }
+            })
+        }catch(error){
+            response.status(404);
+            next(`Cannot POST /planets/${planetId}/photo`);
+        }
+
+
         response.status(201).json({ photoFilename});
     });
 
 
 
-
+app.use("/planets/photos", express.static("uploads"));
 
 //after all the routes - run the middleware
 app.use(ValidationErrorMiddleware);
