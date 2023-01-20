@@ -318,6 +318,26 @@ describe("POST /planets/:id/photo", () => {
 
     });
 
+    test("Valid request with JPG file upload", async () => {
+        await request
+        .post("/planets/23/photo")
+        .attach("photo", "test-fixtures/photos/file.jpg")
+        .expect(201)
+        .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+
+    });
+
+    test("Invalid request with text file upload", async () => {
+       const response =  await request
+        .post("/planets/23/photo")
+        .attach("photo", "test-fixtures/photos/file.txt")
+        .expect(500)
+        .expect("Content-Type",/text\/html/);
+
+    expect(response.text).toContain("Error: The uploaded file must be a JPG or a ONG image.");
+
+    });
+
     test("Planet does not exist", async () => {
         //@ts-ignore
         prismaMock.planet.update.mockRejectedValue(new Error("Error"));
