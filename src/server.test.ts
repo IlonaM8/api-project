@@ -194,3 +194,38 @@ describe("PUT /planets/:id", () => {
     })
 
 
+
+// Delete a planet
+    describe("DELETE /planets/:id", () => {
+        test("Valid request", async() => {
+           const response = await request
+           .delete("/planets/5")
+           .expect(204)  //response 204 - no content
+
+           expect(response.text).toEqual("");
+       });
+
+       //error test for a specific request
+       test("Planet does not exist", async () => {
+
+        const response = await request
+              .delete("/planets/56")
+              .expect(404)
+              .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot DELETE /planets/56")
+
+       });
+
+       test("Invalid Planet ID", async () => {
+
+        const response = await request
+              .delete("/planets/asdf")
+              .expect(404)
+              .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot DELETE /planets/asdf")
+
+       });
+
+    })

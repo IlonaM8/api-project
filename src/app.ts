@@ -63,9 +63,7 @@ app.get("/planets/:id(\\d+)", async (request, response, next) => {
 
 //route for update
 app.put(
-    "/planets/:id(\\d+)",
-    validate({ body: planetSchema }),
-    async (request, response, next) => {
+    "/planets/:id(\\d+)",validate({ body: planetSchema }), async (request, response, next) => {
         const planetId = Number(request.params.id);
         const planetData: planetData = request.body; //if valid - should be type planetData
 
@@ -84,6 +82,39 @@ app.put(
     }
 );
 
+// route for delete
+app.delete("/planets/:id(\\d+)", async (request, response, next) => {
+        const planetId = Number(request.params.id);
+
+        try {
+            await prisma.planet.delete({
+                where: { id: planetId },
+            });
+
+            response.status(204).end();
+        } catch (error) {
+            response.status(404);
+            next(`Cannot DELETE /planets/${planetId}`);
+        }
+    });
+
+
+
+
+
+
+//after all the routes - run the middleware
+app.use(ValidationErrorMiddleware);
+
+export default app;
+
+
+
+
+
+
+
+
 /**
 
 Here is the planet with the id: 5
@@ -98,7 +129,17 @@ Here is the planet with the id: 5
 }
  */
 
-//after al the routes - run the middleware
-app.use(ValidationErrorMiddleware);
 
-export default app;
+
+/* Here is the update with a description for planet with the id: 5
+{
+    "id": 5,
+    "name": "TOI 700 b",
+    "description": "TOI-700 b is a super Earth exoplanet that orbits an M-type star.
+                     Its mass is 1.11 Earths, it takes 10 days to complete one orbit of its star",
+    "diameter": 77581,
+    "moons": 1,
+    "createdAt": "2023-01-19T14:35:08.888Z",
+    "updatedAt": "2023-01-19T14:35:08.888Z"
+}
+ */
