@@ -11,6 +11,7 @@ import { initSessionMiddleware } from "./lib/middleware/session";
 import { passport } from "./lib/middleware/passport";
 
 import planetsRoute from "./routes/planets";
+import authRoutes from "./routes/auth";
 
 
 
@@ -31,6 +32,8 @@ app.use(initCorsMiddleware());
 
 //routes after the cors middleware
 app.use("/planets", planetsRoute);
+//auth routes
+app.use("/auth", authRoutes);
 
 //after all the routes - run the middleware
 app.use(ValidationErrorMiddleware);

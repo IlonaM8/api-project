@@ -103,7 +103,8 @@ describe("GET /planets", () => {
             .get("/planets")
             .expect(200)
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.body).toEqual(planets);
     });
@@ -122,7 +123,8 @@ describe("POST /planets", () => {
             .send(planet)
             .expect(201) //response 201 - something new is being created
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.body).toEqual(planet);
     });
@@ -162,7 +164,8 @@ describe("GET /planet/:id", () => {
             .send(planet)
             .expect(200) //response 201 - something new is being created
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.body).toEqual(planet);
     });
@@ -211,7 +214,8 @@ describe("PUT /planets/:id", () => {
             })
             .expect(200) //response 201 - something new is being created
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.body).toEqual(planet);
     });
@@ -276,7 +280,8 @@ describe("DELETE /planets/:id", () => {
         const response = await request
         .delete("/planets/5")
         .expect(204) //response 204 - no content
-        .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+        .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+        .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.text).toEqual("");
     });
@@ -314,7 +319,8 @@ describe("POST /planets/:id/photo", () => {
         .post("/planets/23/photo")
         .attach("photo", "test-fixtures/photos/file.png")
         .expect(201)
-        .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+        .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+        .expect("Access-Control-Allow-Credentials", "true");
 
     });
 
@@ -323,7 +329,8 @@ describe("POST /planets/:id/photo", () => {
         .post("/planets/23/photo")
         .attach("photo", "test-fixtures/photos/file.jpg")
         .expect(201)
-        .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+        .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+        .expect("Access-Control-Allow-Credentials", "true");
 
     });
 
