@@ -1,51 +1,57 @@
 <!DOCTYPE html>
 <html>
-<body>
-    <form action="http://localhost:3000/planets" id="form-add">
-        <label>
-            <strong>Name:</strong>
-            <input type="text" name="name">
-        </label>
-        <label>
-            <strong>Diameter:</strong>
-            <input type="number" name="diameter">
-        </label>
-        <label>
-            <strong>Moons:</strong>
-            <input type="number" name="moons">
-        </label>
+    <body>
+        <p>
+            <a
+                href="http://localhost:3000/auth/login?redirectTo=http://localhost:8080/add"
+                >Login</a
+            >
+        </p>
+        <form action="http://localhost:3000/planets" id="form-add">
+            <label>
+                <strong>Name:</strong>
+                <input type="text" name="name" />
+            </label>
+            <label>
+                <strong>Diameter:</strong>
+                <input type="number" name="diameter" />
+            </label>
+            <label>
+                <strong>Moons:</strong>
+                <input type="number" name="moons" />
+            </label>
 
-        <input type="submit" value="Add planet">
-    </form>
+            <input type="submit" value="Add planet" />
+        </form>
 
-    <script>
-        async function addPlanet(event) {
-            event.preventDefault();
+        <script>
+            async function addPlanet(event) {
+                event.preventDefault();
 
-            const form = event.currenttarget;
+                const form = event.currenttarget;
 
-            const formData = new FormData(form);
-            const plainFormData = Object.fromEntries(formdata.entries());
-            const formDataJsonString = JSON.stringify(plainFormData);
+                const formData = new FormData(form);
+                const plainFormData = Object.fromEntries(formdata.entries());
+                const formDataJsonString = JSON.stringify(plainFormData);
 
-            const url = form.action;
+                const url = form.action;
 
-            const response = await fetch(url,  {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: formDataJsonString,
-            });
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: formDataJsonString,
+                    credentials: "include", //making sure to include essential cookies in our browser
+                });
 
-            const planet = await responde.json();
+                const planet = await responde.json();
 
-            console.dir(planet);
-        }
+                console.dir(planet);
+            }
 
-        const addForm = document.getElementById("form-data");
-        addForm.addEventListener("submit", addPlanet);
-    </script>
-
-</body>
+            const addForm = document.getElementById("form-data");
+            addForm.addEventListener("submit", addPlanet);
+        </script>
+    </body>
 </html>

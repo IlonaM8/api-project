@@ -3,7 +3,8 @@ module.exports = {
     testEnvironment: "node",
     verbose: true,
     setupFilesAfterEnv: [
-        "./src/lib/middleware/multer.mock.ts"
+        "./src/lib/middleware/multer.mock.ts",
+        "./src/lib/middleware/passport.mock.ts",
     ]
 
 };

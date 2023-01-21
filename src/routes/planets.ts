@@ -8,6 +8,8 @@ import {
     planetData,
 } from "../lib/middleware/validation";
 
+import { checkAuthorizazion  } from "../lib/middleware/passport";
+
 //import multer middleware here
 import { initMulterMiddleware } from "../lib/middleware/multer";
 
@@ -28,9 +30,7 @@ router.get("/", async (request, response) => {
 
 //creating a new route with POST method
 // call validate() fun to validate the request body. The request body will be validated against the description in planetSchema
-router.post(
-    "/",
-    validate({ body: planetSchema }),
+router.post("/", checkAuthorizazion, validate({ body: planetSchema }),
     async (request, response) => {
         const planetData: planetData = request.body; //if valid - should be type planetData
 
@@ -65,7 +65,7 @@ router.get("/:id(\\d+)", async (request, response, next) => {
 
 //route for update
 router.put(
-    "/:id(\\d+)",
+    "/:id(\\d+)", checkAuthorizazion,
     validate({ body: planetSchema }),
     async (request, response, next) => {
         const planetId = Number(request.params.id);
@@ -87,7 +87,7 @@ router.put(
 );
 
 // route for delete
-router.delete("/:id(\\d+)", async (request, response, next) => {
+router.delete("/:id(\\d+)", checkAuthorizazion, async (request, response, next) => {
     const planetId = Number(request.params.id);
 
     try {
@@ -104,7 +104,7 @@ router.delete("/:id(\\d+)", async (request, response, next) => {
 
 //route for file uploads
 router.post(
-    "/:id(\\d+)/photo",
+    "/:id(\\d+)/photo", checkAuthorizazion,
     upload.single("photo"),
     async (request, response, next) => {
         //console.log("request.file", request.file);
